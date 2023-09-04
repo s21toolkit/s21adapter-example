@@ -1,9 +1,16 @@
+import Elysia from "elysia"
 import { Api } from "@/api"
 
 const api = new Api({
-	baseURL: "http://localhost:1323",
+	baseURL: process.env.ADAPTER_URL,
 })
 
-const response = await api.s21Adapter.getCurrentUser({})
+const app = new Elysia()
 
-console.log("User data:", response.data)
+app.get("/user", async () => {
+	const { data } = await api.s21Adapter.getCurrentUser({})
+
+	return data
+})
+
+app.listen(8080)

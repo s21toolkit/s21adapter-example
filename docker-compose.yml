@@ -1,0 +1,26 @@
+version: '3.9'
+
+networks:
+  internal:
+    driver: bridge
+
+services:
+  s21adapter:
+    image: ghcr.io/s21toolkit/s21adapter:v1.0.3
+    env_file:
+      - .env
+    networks:
+      - internal
+
+  example-app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    environment:
+      - ADAPTER_URL=http://s21adapter:1323
+    networks:
+      - internal
+    ports:
+      - 8080:8080
+    depends_on:
+      - s21adapter
